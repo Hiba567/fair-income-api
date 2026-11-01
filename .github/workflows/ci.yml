@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Run tests
+        run: pytest -q
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image (synthetic data, so CI does not depend on OpenML)
+        run: docker build --build-arg TRAIN_ARGS=--synthetic -t fair-income-api .
+
+      - name: Smoke test the running container
+        run: |
+          docker run -d -p 7860:7860 --name api fair-income-api
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:7860/health && break
+            sleep 1
+          done
+          curl -sf -X POST http://localhost:7860/predict \
+            -H "Content-Type: application/json" \
+            -d '{"age":38,"education_num":13,"hours_per_week":40,"capital_gain":0,"capital_loss":0,"workclass":"Private","marital_status":"Married","occupation":"Tech"}'
