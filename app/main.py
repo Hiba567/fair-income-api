@@ -12,6 +12,7 @@ from pathlib import Path
 import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import RedirectResponse
 
 from app.schemas import Applicant, Prediction
 
@@ -54,6 +55,10 @@ async def track_latency(request: Request, call_next):
     stats["total_latency_ms"] += (time.perf_counter() - start) * 1000
     return response
 
+@app.get("/", include_in_schema=False)
+def root():
+    """Send visitors of the bare URL to the interactive docs."""
+    return RedirectResponse(url="/docs")
 
 @app.get("/health")
 def health():
