@@ -4,7 +4,7 @@ A machine learning model served as a production-style web API, with a **built-in
 
 The model predicts whether a person's income is above $50K from census data (the UCI Adult dataset, a standard fairness benchmark). Sex and race are **not** used as model inputs, but every trained model is audited across both groups, because leaving a sensitive attribute out does not make a model fair.
 
-**Live demo:** [add your deployed URL here]
+**Live demo:** https://fair-income-api.onrender.com/docs
 
 ## What this project shows
 
@@ -16,16 +16,13 @@ The model predicts whether a person's income is above $50K from census data (the
 
 ## Results
 
-Fill this in after running `python -m training.train` on the real data:
-
 | Metric | Value |
 |---|---|
-| Accuracy | [ ] |
-| ROC AUC | [ ] |
-| Equalized odds difference (sex) | [ ] (95% CI [ ] to [ ]) |
-| Demographic parity difference (sex) | [ ] |
-| Equalized odds difference (race) | [ ] (95% CI [ ] to [ ]) |
-
+| Accuracy | 0.846 |
+| ROC AUC | 0.900 |
+| Equalized odds difference (sex) | 0.173 (95% CI 0.123 to 0.218) |
+| Demographic parity difference (sex) | 0.194 |
+| Equalized odds difference (race) | 0.279 (95% CI 0.138 to 0.623) |
 The full report is served at `/fairness`.
 
 ## API
