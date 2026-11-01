@@ -1,7 +1,9 @@
 FROM python:3.11-slim
 
 # Run as a non-root user (required by Hugging Face Spaces, good practice everywhere)
-RUN useradd -m -u 1000 appuser
+RUN useradd -m -u 1000 appuser \
+    && mkdir -p /home/appuser/app \
+    && chown appuser:appuser /home/appuser/app
 WORKDIR /home/appuser/app
 
 COPY --chown=appuser requirements.txt .

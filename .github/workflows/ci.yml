@@ -44,3 +44,6 @@ jobs:
           curl -sf -X POST http://localhost:7860/predict \
             -H "Content-Type: application/json" \
             -d '{"age":38,"education_num":13,"hours_per_week":40,"capital_gain":0,"capital_loss":0,"workclass":"Private","marital_status":"Married","occupation":"Tech"}'
+            - name: Show container logs if something failed
+        if: failure()
+        run: docker logs api || true
